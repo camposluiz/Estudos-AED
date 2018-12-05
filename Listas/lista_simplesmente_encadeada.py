@@ -13,7 +13,7 @@ class LinkedList:
             self.content = value
 
     def __len__(self):
-        return self.__length
+        return self.__length  # retornando o tamanho da lista
 
     def __iter__(self):
         return self
@@ -51,7 +51,7 @@ class LinkedList:
         if key < 0:  # tratando índices negativos (del lista[-1]) -> apaga o último elemento
             key += len(self)
 
-        if key <= 0 or key >= len(self):  # informando possíveis erros
+        if key < 0 or key >= len(self):  # informando possíveis erros
             raise IndexError('list assignment index out of range')
 
 
@@ -133,7 +133,7 @@ class LinkedList:
 
                 if i == key:
 
-                    new_node.next = current
+                    new_node.next = previous.next
                     previous.next = new_node
                     break
 
@@ -148,3 +148,15 @@ class LinkedList:
 
     def append(self, value):  # inserindo um elemento na última posição
         self.insert(len(self), value)
+
+
+lista = LinkedList()
+lista.append(4)
+lista.append(5)
+lista.append(7)
+print(lista)
+
+lista.pop()
+print(lista)
+del lista[0]
+print(lista)
