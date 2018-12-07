@@ -36,7 +36,7 @@ class Queue:
     def __repr__(self):
         return self.__str__()
 
-    def __str__(self):  # Iprimindo a lista na forma bruta do python
+    def __str__(self):  # Iprimindo a pilha na forma bruta do python
         aux = '|'
 
         for i, element in enumerate(self):
@@ -55,7 +55,7 @@ class Queue:
 
         new_item = self.Node(value)
 
-        if len(self) == 0:  # Caso a lista esteja vazia
+        if len(self) == 0:  # Caso a fila esteja vazia
 
             self.__head = new_item
             self.__tail = new_item
@@ -89,7 +89,10 @@ class Queue:
                 current.next = None
 
             self.__length -= 1  # Um elemento foi removido
-            self.__iterating = None  # Lista alterar, iterating é reinicializado
+            self.__iterating = None  # Como a foi fila alterada, iterating é reinicializado
+
+    def isempty(self):
+        return len(self) == 0
 
 fila = Queue()
 fila.enqueue('física 1')
@@ -102,3 +105,6 @@ print(fila)
 
 for item in fila:  # Conseguindo iterar na lista
     print(item)
+
+print(fila.isempty())
+print(len(fila))
