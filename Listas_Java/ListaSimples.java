@@ -1,7 +1,6 @@
 package ListaEncadeada;
 
-
-class LinkedList {
+class LinkedList  {
 
     private No primeiro;
     private No ultimo;
@@ -28,7 +27,6 @@ class LinkedList {
         }
 
     }
-
 
     void inserir(int chave, int valor) {
 
@@ -61,6 +59,7 @@ class LinkedList {
 
             int i = 0;
             No atual = this.primeiro;
+            No anterior = null;
 
             while (i <= chave) {
 
@@ -68,13 +67,14 @@ class LinkedList {
                     break;
                 }
 
-                if (i == chave - 1) {
+                if (i == chave) {
 
-                    novo.proximo = atual.proximo;
-                    atual.proximo = novo;
+                    novo.proximo = anterior.proximo;
+                    anterior.proximo = novo;
 
                 }
 
+                anterior = atual;
                 atual = atual.proximo;
                 i += 1;
 
@@ -84,6 +84,77 @@ class LinkedList {
 
         this.tamanho += 1;
 
+    }
+
+    void append(int value) {
+
+        inserir(this.tamanho, value);
+
+    }
+
+    void remover(int key) {
+
+        if (key < 0)  // Tratando índices negativos
+            key += this.tamanho;
+
+        if (key < 0 || key >= this.tamanho) {
+            throw new IndexOutOfBoundsException("índice fora dos limites da lista");
+        }
+
+        No atual = this.primeiro;
+        No anterior = null;
+
+        int i = 0;
+        while (i <= key) {
+
+            if (atual == null)
+                break;
+
+            if (i == key) {
+
+                // Removendo de uma lista vazia
+                if (this.tamanho == 0) {
+
+                    this.primeiro = null;
+                    this.ultimo = null;
+                }
+
+                // Removendo o primeiro elemento da lista
+                else if (key == 0) {
+
+                    this.primeiro = atual.proximo;
+                    atual.proximo = null;
+                }
+
+                // Removendo o último elemento da lista
+
+                else if (key == this.tamanho - 1) {
+
+                    this.ultimo = anterior;
+                    anterior.proximo = null;
+                }
+
+                // Removendo um elemento no meio da lista
+                else {
+
+                    anterior.proximo = atual.proximo;
+                    atual.proximo = null;
+
+                }
+
+                this.tamanho -= 1;
+                break;
+            }
+
+            anterior = atual;
+            i += 1;
+
+        }
+
+    }
+
+    int tamanho () {
+        return this.tamanho;
     }
 
     public String toString(){
@@ -109,6 +180,4 @@ class LinkedList {
         return retorno.toString();
 
     }
-
-
 }
