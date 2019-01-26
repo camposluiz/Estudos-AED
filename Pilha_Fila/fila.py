@@ -1,110 +1,97 @@
-
-""" Implementação de uma estrutura do tipo fila, usando uma lista simplesmente encadeada """
-
-class Queue:
+class Fila:
 
     def __init__(self):
-        self.__head = None  # Aponta para o primeiro elemento da lista
-        self.__tail = None  # Aponta para o último elemento da lista
-        self.__length = 0
-        self.__iterating = None  # Auxilar para iterar na lista
+        self.__primeiro = None  # Aponta para o primeiro elemento na fila
+        self.__ultimo = None  # Aponta para o último elemento na fila
+        self.__tamanho = 0
+        self.__iterando = None
 
-    class Node:  # Criação de um nó
+    class No:
 
-        def __init__(self, value):
-            self.next = None
-            self.item = value
+        def __init__(self, valor):
+            self.proximo = None
+            self.chave = valor
 
     def __len__(self):
-        return self.__length
+        return self.__tamanho
 
     def __iter__(self):
         return self
 
-    def __next__(self):
-        # Iterando na lista usando o conceito de lazy evaluation
-        if self.__iterating is None:
-            self.__iterating = self.__head  # Iterando no primeiro elemento
-        else:
-            self.__iterating = self.__iterating.next  # Indo para o próximo elemento
+    def __next__(self):  # Iterando na fila usando o conceito de lazy evaluation
 
-        if self.__iterating is not None:
-            return self.__iterating.item  # Retornando o elemento
+        if self.__iterando is None:
+            self.__iterando = self.__primeiro  # Começando a iterar do início
+        else:
+            self.__iterando = self.__iterando.proximo  # Indo para o próximo da fila
+
+        if self.__iterando is not None:
+            return self.__iterando.chave  # Retornado o valor
 
         raise StopIteration  # Parando de iterar
 
     def __repr__(self):
         return self.__str__()
 
-    def __str__(self):  # Iprimindo a pilha na forma bruta do python
-        aux = '|'
+    def __str__(self):
+        output = '{'
 
-        for i, element in enumerate(self):
-
-            aux += element.__repr__()
+        for i, e in enumerate(self):
+            output += e.__repr__()
 
             if i < len(self) - 1:
+                output += ', '
 
-                aux += ', '
+        output += '}'
 
-        aux += '|'
+        return output
 
-        return aux
+    def enqueue(self, valor):
 
-    def enqueue(self, value):  # Insere um item na última posição da fila
+        """ Insere um elemento sempre no fim da fila
+            Complexidade: O(1) """
 
-        new_item = self.Node(value)
+        new_item = self.No(valor)
 
-        if len(self) == 0:  # Caso a fila esteja vazia
-
-            self.__head = new_item
-            self.__tail = new_item
-
-        else:  # Se não, vamos sempre iserir no fim
-
-            self.__tail.next = new_item
-            self.__tail = new_item
-
-        self.__length += 1
-        self.__iterating = None
-
-    def dequeue(self):  # Remove o primeiro item da fila
-
-        if len(self) == 0:  # Se a fila estiver vazia, não há quem remover
-
-            raise IndexError('list assignment index out of range')
-
+        if len(self) == 0:
+            self.__primeiro = new_item
+            self.__ultimo = new_item
         else:
+            self.__ultimo.proximo = new_item  # Ligando o penúltimo da fila com o novo da fila
+            self.__ultimo = new_item  # O último da fila agora é o elemento que foi adicionado
 
-            if len(self) == 1:  # Se tiver apenas um elemento na fila
+        self.__tamanho += 1
+        self.__iterando = None
 
-                self.__head = None
-                self.__tail = None
+    def dequeue(self):
 
+        """ Remove sempre o primeiro elemento da fila
+            Complexidade: O(1) """
+
+        atual_primeiro = self.__primeiro  # Primeiro elemento da fila
+
+        if len(self) >= 1:  # Existem elementos na fila a serem removidos
+
+            if len(self) == 1:
+                self.__primeiro = None
+                self.__ultimo = None
             else:
 
-                current = self.__head  # Primeiro elemento
+                self.__primeiro = atual_primeiro.proximo
+                atual_primeiro.proximo = None
 
-                self.__head = current.next
-                current.next = None
+            self.__tamanho -= 1
+            self.__iterando = None
+            return atual_primeiro
 
-            self.__length -= 1  # Um elemento foi removido
-            self.__iterating = None  # Como a foi fila alterada, iterating é reinicializado
+        raise ValueError('não há elemento na fila a serem removidos')
 
-    def isempty(self):
-        return len(self) == 0
-
-fila = Queue()
-fila.enqueue('física 1')
-fila.enqueue('física teórica')
-fila.enqueue('física de partículas')
-
+fila = Fila()
+fila.enqueue(4)
+fila.enqueue(3)
+fila.enqueue(1)
 print(fila)
 fila.dequeue()
-print(fila)
 
-for item in fila:  # Conseguindo iterar na lista
-    print(item)
-
-print(fila.isempty())
-print(len(fila))
+for elemento in fila:
+    print(elemento, end=' ')
