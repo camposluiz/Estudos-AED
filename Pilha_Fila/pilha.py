@@ -1,113 +1,96 @@
-
 """ Implementação de uma estrutura pilha usando listas simplesmente encadeada """
 
-
-class Stack:
+class Pilha:
 
     def __init__(self):
+        self.__topo = None  # Aponta para o elemento que está no topo da pilha
+        self.__tamanho = 0
+        self.__iterando = None
 
-        self.__head = None
-        self.__tail = None
-        self.__length = 0
-        self.__iterating = None  # Auxiliar para iterar na lista
+    class No:
 
-    class Node:
-
-        def __init__(self, value):
-            self.next = None
-            self.item = value
+        def __init__(self, valor):
+            self.chave = valor
+            self.abaixo = None  # Aponta para o elemento que está abaixo na pilha
 
     def __len__(self):
-        return self.__length  # Retornando o tamanho da lista
+        return self.__tamanho
 
     def __iter__(self):
         return self
 
-    def __next__(self):
-        # Iterando na lista com o conceito de lazy evaluation
-        if self.__iterating is None:
-            self.__iterating = self.__head  # Começando a iterar do primeiro elemento
+    def __next__(self):  # Iterando sobre os elementos na pilha
+        if self.__iterando is None:
+            self.__iterando = self.__topo
         else:
-            self.__iterating = self.__iterating.next  # Indo para o próximo elemento
+            self.__iterando = self.__iterando.abaixo
 
-        if self.__iterating is not None:
-            return self.__iterating.item  # Retornando o valor do elemento da vez
+        if self.__iterando is not None:
+            return self.__iterando.chave
 
-        raise StopIteration  # Não há mais nada para iterar, então paramos
+        raise StopIteration
 
     def __repr__(self):
         return self.__str__()
 
-    def __str__(self):  # Retornando a pilha da forma bruta do python
+    def __str__(self):
 
-        aux = '|'
+        output = '{'
 
-        for i, element in enumerate(self):
+        for i, e in enumerate(self):
 
-            aux += element.__repr__()
+            output += e.__repr__()
 
             if i < len(self) - 1:
-                aux += ', '
+                output += ', '
 
-        aux += '|'
+        output += '}'
 
-        return aux
+        return output
 
-    def push(self, value):  # Insere no inicio da pilha
+    def push(self, valor):
 
-        new_item = self.Node(value)
+        novo_item = self.No(valor)
 
-        if len(self) == 0:  # Inserindo na pilha se ela estiver vazia
-
-            self.__head = new_item
-            self.__tail = new_item
+        if len(self) == 0:  # Pilha está vazia
+            self.__topo = novo_item
 
         else:
+            novo_item.abaixo = self.__topo  # O novo item aponta para o elemento que está abaixo
+            self.__topo = novo_item
 
-            new_item.next = self.__head
-            self.__head = new_item
+        self.__tamanho += 1
+        self.__iterando = None
 
-        self.__length += 1
-        self.__iterating = None
+    def pop(self):
 
-    def pop(self):  # Remove o primeiro item da pilha
+        atual_topo = self.__topo  # Elemento topo que será removido
 
-        current = self.__head
+        if len(self) >= 1:  # Caso haja no mínimo um elemento na pilha
 
-        if len(self) == 0:  # Não há nenhum item na pilha para se poder remover
-            raise IndexError('no items in the stack')
+            self.__topo = atual_topo.abaixo
+            atual_topo.abaixo = None
 
-        elif len(self) == 1:  # Se houver apenas um elemento
+            self.__tamanho -= 1
+            self.__iterando = None
+            return
 
-            self.__head = None
-            self.__tail = None
+        raise ValueError('Não há elementos a serem removidos da pilha')
 
-        else:
-
-            self.__head = current.next
-            current.next = None
-
-        self.__length -= 1
-        self.__iterating = None  # Como a pilha foi alterarda, iterando deve ser reinicializado
-
-    def findpeek(self):  # Retorna o elemento que está no topo da pilha
-        return self.__head.item
-
-    def isempty(self):  # Se a pilha está ou não vazia
+    def vazia(self):
         return len(self) == 0
 
-pilha = Stack()
-pilha.push(5)
-pilha.push(6)
-pilha.push(8)
-pilha.push(7)
+    def findpeek(self):
+        return self.__topo.chave
 
-for item in pilha:
-    print(item)
+pilha = Pilha()
+
+pilha.push(1)
+pilha.push(2)
+pilha.push(3)
 
 print(pilha)
-print(pilha.findpeek())
-
+print(len(pilha))
 pilha.pop()
 print(pilha)
-print(pilha.findpeek())
+print(len(pilha))
