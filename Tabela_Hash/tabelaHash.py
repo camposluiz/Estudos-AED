@@ -21,7 +21,7 @@ class TabelaHash:
     def __repr__(self):
         return self.__str__()
 
-    # Método que imprimi a tabela visualmento igual a forma que o python faz
+    # Método que imprimi a tabela visualmente igual a forma que o python faz
     def __str__(self):
         output = '{'
 
@@ -42,7 +42,7 @@ class TabelaHash:
         elemento.valor = value
 
     def __delitem__(self, key):
-        elemento, existe, indice_tabela, indice_lista = self.__informacoes_elemento(key)
+        _, existe, indice_tabela, indice_lista = self.__informacoes_elemento(key)
 
         if existe:
             del self.__tabela[indice_tabela][indice_lista]
@@ -88,7 +88,7 @@ class TabelaHash:
 
 
     def __informacoes_elemento(self, key):
-        """ Método que retorna uma tupla contento:
+        """ Método que retorna uma tupla contendo:
 
             referência ao objeto, valor booleano se o elemento existe,
             índice na tabela, índice na lista ligada dentro da tabela"""
